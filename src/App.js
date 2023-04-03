@@ -1,25 +1,36 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState } from 'react';
+import Showtodos from './components/Showtodos';
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
+  const [input,setInput]=useState('');
+  const [todos,setTodos]=useState([]);
+  const handleSubmit=(e)=>{
+    e.preventDefault();
+    const id=uuidv4();
+    setTodos([...todos,{
+      'name':input,
+      'id':id
+    }])
+    setInput('');
+  }
+  const deleteTodo=(id)=>{
+    let newtodos=todos.filter((todo)=>{
+      return todo.id !==id;
+    })
+    setTodos(newtodos);
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <form className='create-todo' onSubmit={handleSubmit}>
+        <input type='text' onChange={(e)=>setInput(e.target.value)} value={input}/>
+        <button type='submit'>Add todo</button>
+      </form>
+      <Showtodos todos={todos} deleteTodo={deleteTodo}/>
     </div>
   );
 }
 
 export default App;
+
